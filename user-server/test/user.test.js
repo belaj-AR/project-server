@@ -207,5 +207,30 @@ describe('Creating an account', () => {
       });
   });
 
+  it("should return response with properties status, message, and data new user if data complete", done => {
+
+    chai
+      .request(app)
+      .post('/users')
+      .send(userData1)
+      .end((err, res) => {
+        expect(res).to.have.status(201);
+        expect(res.body).to.have.property("status");
+        expect(res.body).to.have.property("message");
+        expect(res.body).to.have.property("data");
+        expect(res.body.data).to.have.property("fname");
+        expect(res.body.data).to.have.property("lname");
+        expect(res.body.data).to.have.property("email");
+        expect(res.body.data.fname).to.equal(userData1.fname);
+        expect(res.body.data.lname).to.equal(userData1.lname);
+        expect(res.body.data.email).to.equal(userData1.email);
+        expect(res.body.status).to.equal("success");
+        expect(res.body.message).to.equal(
+          `success creating new account with email ${userData1.email}`
+        );
+        done();
+      })
+  })
+
   
 });

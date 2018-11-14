@@ -11,7 +11,7 @@ module.exports = {
             });
         }).catch((err) => {
             res.status(500).json({
-                message: 'unable to fetch the data'
+                message: 'unable to fetch the item'
             });
         });
 
@@ -24,8 +24,8 @@ module.exports = {
                 data: result
             })
         }).catch((err) => {
-            res.status(500).json({
-                message: 'unable to fetch the data'
+            res.status(400).json({
+                message: 'unable to find the item'
             });
         });
     },
@@ -56,7 +56,7 @@ module.exports = {
                 data: result
             });
         }).catch((err) => {
-            res.status(500).json({
+            res.status(400).json({
                 message: 'unable to delete the data'
             });
         });

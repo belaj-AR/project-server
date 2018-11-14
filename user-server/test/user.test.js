@@ -85,5 +85,21 @@ describe('Creating an account', () => {
       });
   });
 
+  it("should return msg 'Email is invalid' if input 'johndoe.com' ", done => {
+    userData1.email = "johndoe.com";
+    chai
+      .request(app)
+      .post("/users")
+      .send(userData1)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        expect(res.body).to.have.property("status");
+        expect(res.body).to.have.property("message");
+        expect(res.body.message).to.equal("Email is invalid");
+        expect(res.body.status).to.equal("failed");
+        done();
+      });
+  });
+
   
 });

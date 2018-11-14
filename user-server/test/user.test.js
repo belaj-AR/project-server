@@ -153,5 +153,23 @@ describe('Creating an account', () => {
       });
   });
 
+  it("should return response success if lname not filled ", done => {
+    userData1.lname = "";
+    chai
+      .request(app)
+      .post("/users")
+      .send(userData1)
+      .end((err, res) => {
+        expect(res).to.have.status(201);
+        expect(res.body).to.have.property("status");
+        expect(res.body).to.have.property("message");
+        expect(res.body.message).to.equal(
+          `success creating new account with email ${userData1.email}`
+        );
+        expect(res.body.status).to.equal("success");
+        done();
+      });
+  })
+
   
 });

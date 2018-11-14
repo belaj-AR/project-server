@@ -252,3 +252,53 @@ describe('Creating an account', () => {
       })
   })
 });
+
+describe('Generate Token', () => {
+
+  afterEach(done => {
+    User.deleteMany({})
+      .then(() => {
+        done()
+      })
+  });
+  
+  it('should return object with property token', done => {
+
+    let user = new User(userData1)
+    user.save().then(() => {})
+
+    let dataUser = {
+      email: userData1.email,
+      uid: userData1.uid
+    }
+
+    chai
+      .request(app)
+      .post('/users/token')
+      .send(dataUser)
+      .end((err, res) => {
+        expect(res).to.have.status(201)
+        expect(res.body).to.have.property('token')
+        done()
+      })
+  })
+
+  it("should return msg 'wrong user data' response error if input with random non registered data", done => {
+
+    let dataUser = {
+      email: 'johndo@mail.com',
+      uid: 123
+    }
+
+    chai
+      .request(app)
+      .post('/users/token')
+      .send(dataUser)
+      .end((err, res) => {
+        expect(res).to.have.status(500)
+        expect(res.body).to.have.property('message')
+        expect(res.body.message).to.equal('wrong user data')
+        done()
+      })
+  })
+})

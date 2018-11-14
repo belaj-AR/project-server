@@ -135,5 +135,23 @@ describe('Creating an account', () => {
       });
   });
 
+  it("should return 'First name must be contained with characther only' response error if input contains number ", done => {
+    userData1.fname = 'an4'
+    chai
+      .request(app)
+      .post('/users')
+      .send(userData1)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        expect(res.body).to.have.property('status');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal(
+          'First name must be contained with characther only'
+        );
+        expect(res.body.status).to.equal('failed');
+        done();
+      });
+  });
+
   
 });

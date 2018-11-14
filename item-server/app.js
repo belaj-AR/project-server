@@ -12,7 +12,19 @@ var app = express();
 
 app.use(cors());
 
-mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true});
+if (process.env.STAGE === 'test') {
+
+    mongoose.connect(process.env.DB_TEST, {useNewUrlParser: true}); 
+
+} else if (process.env.STAGE === 'dev') {
+
+    mongoose.connect(process.env.DB_DEV, {useNewUrlParser: true});  
+    
+} else if (process.env.STAGE === 'prod', {useNewUrlParser: true}) {
+
+    mongoose.connect(process.env.DB_PROD, {useNewUrlParser: true});
+}
+
 
 
 app.use(logger('dev'));

@@ -1,5 +1,9 @@
 PORT = port
 
-DATABASE_URL = url
+DB_TEST = database testing url
+
+DB_DEV = datavase development url
+
+DB_PROD = database production url
 
 JWT_KEY = password

@@ -8,7 +8,7 @@ const userSchema = new Schema({
     required: [true, 'First name required'],
     validate: {
       validator() {
-        if (this.fname.length < 3) {
+        if (this.fname.length < 2) {
           throw new Error('First name length must be greater than 2')
         }
         let patt = new RegExp(/\d/)

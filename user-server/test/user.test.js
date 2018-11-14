@@ -67,5 +67,23 @@ describe('Creating an account', () => {
       });
   })
 
+  it("should return msg 'Email required' response error if email is empty", done => {
+    
+    userData1.email = ''
+
+    chai
+      .request(app)
+      .post('/users')
+      .send(userData1)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        expect(res.body).to.have.property('status');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal('Email required');
+        expect(res.body.status).to.equal('failed');
+        done();
+      });
+  });
+
   
 });

@@ -1,4 +1,5 @@
 const Item = require('../models/item');
+const { getErrMessage } = require('../helpers');
 
 
 module.exports = {
@@ -43,8 +44,8 @@ module.exports = {
             });
         }).catch((err) => {
             res.status(400).json({
-                message: err.message
-            })
+                message: getErrMessage(err.message) || err.message
+            });
         });
     },
 
@@ -56,7 +57,7 @@ module.exports = {
             });
         }).catch((err) => {
             res.status(500).json({
-                message: err.message
+                message: 'unable to delete the data'
             });
         });
     },
@@ -74,7 +75,7 @@ module.exports = {
             });
         }).catch((err) => {
             res.status(400).json({
-                message: err.message
+                message: getErrMessage(err.message) || err.message
             });
         });
     },   

@@ -73,7 +73,7 @@ describe('/POST items', function() {
             .end( (err, res) => {
                 expect(res.status).to.equal(400);
                 expect(res.body).to.have.property('message');
-                expect(res.body.message).to.equal('input is invalid');
+                expect(res.body.message).to.equal("name can't be empty");
                 done();
             });
 

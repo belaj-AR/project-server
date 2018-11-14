@@ -39,7 +39,7 @@ describe('/POST items', function() {
             .end( (err, res) => {
                 expect(res.status).to.equal(401);
                 expect(res.body).to.have.property('message');
-                expect(res.body.message).to.equal('token is required for adding a new item');
+                expect(res.body.message).to.equal('Please provide a valid token');
                 done();
             });    
     });

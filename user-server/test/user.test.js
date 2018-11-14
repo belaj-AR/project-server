@@ -171,5 +171,23 @@ describe('Creating an account', () => {
       });
   })
 
+  it("should return msg 'Last name length must be greater than 2' response error if lname length must be greater than 2 if input 'a' ", done => {
+    userData1.lname = "a";
+    chai
+      .request(app)
+      .post('/users')
+      .send(userData1)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        expect(res.body).to.have.property('status');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal(
+          'Last name length must be greater than 2'
+        );
+        expect(res.body.status).to.equal('failed');
+        done();
+      });
+  });
+
   
 });

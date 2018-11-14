@@ -302,3 +302,97 @@ describe('Generate Token', () => {
       })
   })
 })
+
+describe('get user data', () => {
+
+  afterEach(done => {
+    User.deleteMany({})
+      .then(() => {
+        done()
+      })
+  });
+  
+  it('should return current user data with properties id and fname', done => {
+
+    let token = ''
+    let user = new User(userData1)
+
+    user.save()
+      .then(({ _id, email, uid }) => {
+        token = jwt.sign({
+          id: _id,
+          email: email,
+          uid: userData1.uid
+        }, process.env.JWT_SECRET)
+
+        chai
+          .request(app)
+          .get('/users')
+          .set({
+            token
+          })
+          .end((err, res) => {
+            expect(res).to.have.status(200);
+            expect(res.body).to.have.property('status');
+            expect(res.body).to.have.property('data');
+            expect(res.body.data).to.have.property('id');
+            expect(res.body.data).to.have.property('fname');
+            expect(res.body.data).to.have.property('avatar');
+            expect(res.body.data).to.have.property('role');
+            done();
+          })
+      })
+  })
+
+  it("should return error with message 'user not found' if input with random unregistered data ", done => {
+
+    let token = ''
+
+    token = jwt.sign({
+      id: '5bec2f3c9d06a81e5d47381b',
+      email: userData1.email,
+      uid: userData1.uid
+    }, process.env.JWT_SECRET)
+
+    chai
+      .request(app)
+      .get('/users')
+      .set({
+        token
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        expect(res.body).to.have.property('status');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal('user not found')
+        done();
+      })
+  })
+
+  it("should return error with message 'wrong token or user not found' if input with random number data on id ", done => {
+
+    let token = ''
+
+    token = jwt.sign({
+      id: 123,
+      email: userData1.email,
+      uid: userData1.uid
+    }, process.env.JWT_SECRET)
+
+    chai
+      .request(app)
+      .get('/users')
+      .set({
+        token
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        expect(res.body).to.have.property('status');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal('wrong token or user not found')
+        done();
+      })
+  })
+
+})
+

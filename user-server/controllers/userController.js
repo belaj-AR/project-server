@@ -1,5 +1,6 @@
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 const errCatcher = require('../helpers/errCatcher')
 
 class ControllerUser {
@@ -24,24 +25,73 @@ class ControllerUser {
       })
   }
 
+  static getToken(req, res) {
+    User.findOne({ email: req.body.email })
+      .then(data => {
+
+        if (data) {
+          let token = jwt.sign({
+            id: data._id,
+            email: data.email,
+            uid: data.uid
+          }, process.env.JWT_SECRET)
+
+          res.status(201).json({
+            token
+          })
+        } else {
+          res.status(500).json({
+            message: 'wrong user data'
+          })
+        }
+
+      })
+      .catch(err => {
+        res.status(500).json({
+          message: 'error when generating token'
+        })
+      })
+  }
+
   static getUserData(req, res) {
     User.findOne({
         _id: req.decoded.id
       })
       .then(data => {
-        res.status(200).json({
-          status: 'success',
-          data: {
-            id: data._id,
-            fname: data.fname,
-            avatar: data.avatar
+        if (data) {
+          if (bcrypt.compareSync(req.decoded.uid, data.uid)) {
+            res.status(200).json({
+              status: 'success',
+              data: {
+                id: data._id,
+                fname: data.fname,
+                avatar: data.avatar,
+                role: data.role
+              }
+            })
+          } else {
+            res.status(500).json({
+              status: 'failed',
+              message: 'wrong token or user not found'
+            })  
           }
-        })
+        } else {
+          res.status(500).json({
+            status: 'failed',
+            message: 'user not found'
+          })
+        }
       })
       .catch(err => {
+
+        let message = err.message
+
+        if (err.message.indexOf("ObjectId")) {
+          message = "wrong token or user not found"
+        }
         res.status(500).json({
           status: 'failed',
-          message: err.message
+          message: message
         })
       })
   }
@@ -65,7 +115,6 @@ class ControllerUser {
         })
       })
       .catch(err => {
-        console.log(err)
         let msg = errCatcher(err.message)
         if (msg.indexOf(',')) {
           msg = msg.split(',')[0]

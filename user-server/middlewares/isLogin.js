@@ -11,8 +11,8 @@ const isLogin = (req, res, next) => {
       next()
 
     } else {
-      res.status(200).json({
-        status: 'success',
+      res.status(500).json({
+        status: 'failed',
         message: 'wrong token'
       })
     }

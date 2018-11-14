@@ -10,23 +10,26 @@ const app = express();
 const port = process.env.PORT || 7001;
 const db = mongoose.connection;
 
-if (process.env.STAGE === 'test') {
-  mongoose.connect(process.env.DB_TEST, {
-  useNewUrlParser: true
-});
+if (process.env.STAGE === 'prod') {
+  mongoose.connect(process.env.DB_PROD, {
+    useNewUrlParser: true
+  });
 } else if (process.env.STAGE === 'dev') {
   mongoose.connect(process.env.DB_DEV, {
-  useNewUrlParser: true
-});
-} else if (process.env.STAGE === 'prod') {
-  mongoose.connect(process.env.DB_PROD, {
-  useNewUrlParser: true
-});
+    useNewUrlParser: true
+  });
+} else {
+  mongoose.connect(process.env.DB_TEST, {
+    useNewUrlParser: true
+  });
 }
 
 mongoose.set('useCreateIndex', true)
 
-app.use(logger());
+if (process.env.STAGE == 'prod' || process.env.STAGE == 'dev') {
+  app.use(logger());
+}
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({
@@ -48,3 +51,5 @@ db.once('open', function() {
 app.listen(port, () => {
   console.log(`\n> Server User running on port ${port}`);
 })
+
+module.exports = app

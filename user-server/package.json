@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "STAGE=test mocha --exit",
+    "test": "STAGE=test mocha",
     "prod": "STAGE=prod node app.js",
     "dev": "STAGE=dev nodemon app.js"
   },

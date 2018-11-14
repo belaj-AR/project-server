@@ -101,5 +101,39 @@ describe('Creating an account', () => {
       });
   });
 
+  it("should return msg 'Email is invalid' response error if input 'gsta.comndry@ean' ", done => {
+    userData1.email = "john.doe@ean";
+    chai
+      .request(app)
+      .post('/users')
+      .send(userData1)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        expect(res.body).to.have.property('status');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal('Email is invalid');
+        expect(res.body.status).to.equal('failed');
+        done();
+      });
+  });
+
+  it("should return msg 'First name length must be greater than 2' if fname length must greater than 2 ", done => {
+    userData1.fname = 'a';
+    chai
+      .request(app)
+      .post('/users')
+      .send(userData1)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        expect(res.body).to.have.property('status');
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal(
+          'First name length must be greater than 2'
+        );
+        expect(res.body.status).to.equal('failed');
+        done();
+      });
+  });
+
   
 });

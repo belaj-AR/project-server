@@ -232,5 +232,23 @@ describe('Creating an account', () => {
       })
   })
 
-  
+  it("should return msg 'Email already taken' response error if input with same email with another user ", done => {
+
+    let user = new User(userData1)
+
+    user.save().then(() => {})
+
+    chai
+      .request(app)
+      .post('/users')
+      .send(userData1)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        expect(res.body).to.have.property('status');
+        expect(res.body).to.have.property('message');
+        expect(res.body.status).to.equal('failed');
+        expect(res.body.message).to.equal("uid already exist");
+        done();
+      })
+  })
 });

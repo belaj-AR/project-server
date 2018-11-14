@@ -38,7 +38,7 @@ module.exports = {
         });
 
         newItem.save().then((item) => {
-            res.status(200).json({
+            res.status(201).json({
                 message: 'item has been successfully added'
             });
         }).catch((err) => {

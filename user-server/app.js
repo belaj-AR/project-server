@@ -4,21 +4,41 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const logger = require('morgan');
 
+const userRoute = require('./routes/userRoutes')
+
 const app = express();
 const port = process.env.PORT || 7001;
+const db = mongoose.connection;
+
+if (process.env.STAGE === 'test') {
+  mongoose.connect(process.env.DB_TEST, {
+  useNewUrlParser: true
+});
+} else if (process.env.STAGE === 'dev') {
+  mongoose.connect(process.env.DB_DEV, {
+  useNewUrlParser: true
+});
+} else if (process.env.STAGE === 'prod') {
+  mongoose.connect(process.env.DB_PROD, {
+  useNewUrlParser: true
+});
+}
+
+mongoose.set('useCreateIndex', true)
 
 app.use(logger());
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({
+  extended: true
+}))
 
-if (process.env.STAGE === 'test') {
-  mongoose.connect(process.env.DB_TEST);
-} else if (process.env.STAGE === 'dev') {
-  mongoose.connect(process.env.DB_DEV);
-} else if (process.env.STAGE === 'prod') {
-  mongoose.connect(process.env.DB_PROD);
-}
-
-const db = mongoose.connection;
+app.use('/users', userRoute)
+app.use('/', (req, res) => {
+  res.status(200).json({
+    message: 'server user active'
+  })
+})
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {

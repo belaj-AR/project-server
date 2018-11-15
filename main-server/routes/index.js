@@ -1,9 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const router = require('express').Router()
+const userRouter = require('./users')
+const itemRouter = require('./items')
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.send('home');
-});
+router.use('/users', userRouter)
+router.use('/items', itemRouter)
 
 module.exports = router;

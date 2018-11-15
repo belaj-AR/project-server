@@ -30,8 +30,10 @@ module.exports = {
     },
 
     getCRUDToken: (req, res, next) => {
-      
-        req.auth.token = jwt.sign({header:'upstream'}, process.env.CRUD_SECRET);
+        
+        let token = jwt.sign({header:'upstream'}, process.env.CRUD_SECRET);
+        
+        req.auth = { token: token }
 
         next();
 

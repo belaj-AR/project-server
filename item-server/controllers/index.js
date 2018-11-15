@@ -66,7 +66,7 @@ module.exports = {
 
     updateItem: (req, res) => {
         let { name, source, textures, element } = req.body;
-
+        
         Item.updateOne({_id: req.params.id}, {
             name: name,
             source: source,
@@ -78,6 +78,7 @@ module.exports = {
                 data: result
             });
         }).catch((err) => {
+            console.log(err.message);
             res.status(400).json({
                 message: getErrMessage(err.message) || err.message
             });

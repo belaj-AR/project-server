@@ -92,6 +92,7 @@ module.exports = {
   },
 
   updateItem: (req, res) => {
+    
     axios({
       method: 'PUT',
       url: `${uriServerItem}/${req.params.id}`,

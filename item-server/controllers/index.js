@@ -11,7 +11,7 @@ module.exports = {
             });
         }).catch((err) => {
             res.status(500).json({
-                message: 'unable to fetch the data'
+                message: 'unable to fetch the item'
             });
         });
 
@@ -24,18 +24,20 @@ module.exports = {
                 data: result
             })
         }).catch((err) => {
-            res.status(500).json({
-                message: 'unable to fetch the data'
+            res.status(400).json({
+                message: 'unable to find the item'
             });
         });
     },
 
     addItem: (req, res) => {
-        let { name, source } = req.body ;
+        let { name, source, textures, element } = req.body ;
 
         let newItem = new Item({
             name: name,
-            source: source
+            source: source,
+            textures: textures,
+            element: element
         });
 
         newItem.save().then((item) => {
@@ -56,18 +58,20 @@ module.exports = {
                 data: result
             });
         }).catch((err) => {
-            res.status(500).json({
+            res.status(400).json({
                 message: 'unable to delete the data'
             });
         });
     },
 
     updateItem: (req, res) => {
-        let { name, source } = req.body;
+        let { name, source, textures, element } = req.body;
 
         Item.updateOne({_id: req.params.id}, {
             name: name,
-            source: source
+            source: source,
+            textures: textures,
+            element: element
         }, {runValidators: true}).then((result) => {
             res.status(200).json({
                 message: 'item has been updated',

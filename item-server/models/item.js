@@ -10,6 +10,10 @@ const itemSchema = new Schema({
     source: {
         type: String,
         required: true
+    },
+    textures: [{type: String}],
+    element: { 
+        type: String 
     }
 }, {timestamps:true});
 

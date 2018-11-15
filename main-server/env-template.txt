@@ -1,2 +1,5 @@
 PORT = port
+
 DATABASE_URL = url
+
+CRUD_SECRET = secretsecret

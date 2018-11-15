@@ -8,80 +8,9 @@ chai.use(chaiHttp);
 const expect = require('chai').expect;
 const jwt = require('jsonwebtoken');
 const token = jwt.sign({foo:'bar'}, process.env.JWT_KEY);
+const client = require('redis').createClient();
 
-describe('/POST items', function() {
-    
 
-    let prototype =  {
-        name: 'fakeModel',
-        source: 'model',
-    };
-
-    
-
-    this.beforeEach( function(done) {
-        Item.deleteOne({name: 'fakeModel', source: 'model'}).then((result) => {
-            done();
-        }).catch((err) => {
-            console.log(err);
-        });
-
-        prototype =  {
-            name: 'fakeModel',
-            source: 'model',
-        };
-
-    });
-
-    it('should return status 401 if token header is not provided', (done) => {
-        
-        chai.request(app)
-            .post('/')
-            .send(prototype)
-            .end( (err, res) => {
-                expect(res.status).to.equal(401);
-                expect(res.body).to.have.property('message');
-                expect(res.body.message).to.equal('Please provide a valid token');
-                done();
-            });    
-    });
-
-    it ('should return status 201 if inputs are valid', (done) => {
-        
-
-        chai.request(app)
-            .post('/')
-            .send(prototype)
-            .set({token: token})
-            .end( (err, res) => {
-                expect(res.status).to.equal(201);
-                expect(res.body).to.have.property('message');
-                expect(res.body.message).to.equal('item has been successfully added');
-                done();
-            });
-
-    });
-
-    it ('should return status 400 if inputs are invalid', (done) => {
-        
-        
-        prototype.name = '';
-        prototype.source = '';
-
-        chai.request(app)
-            .post('/')
-            .set({token: token})
-            .send(prototype)
-            .end( (err, res) => {
-                expect(res.status).to.equal(400);
-                expect(res.body).to.have.property('message');
-                expect(res.body.message).to.equal("name can't be empty");
-                done();
-            });
-
-    });
-
-});
 
 describe('/GET items', function(done) {
     
@@ -295,5 +224,92 @@ describe('/PUT item', function(done) {
     });
     
     
+
+});
+
+describe('/POST items', function() {
+    
+
+    let prototype =  {
+        name: 'fakeModel',
+        source: 'model',
+    };
+
+   
+    this.beforeEach( function(done) {
+        Item.deleteOne({name: 'fakeModel', source: 'model'}).then((result) => {
+            done();
+        }).catch((err) => {
+            console.log(err);
+        });
+
+        prototype =  {
+            name: 'fakeModel',
+            source: 'model',
+        };
+
+    });
+
+    this.afterEach( function(done) {
+        Item.deleteMany().then((result) => {
+            done()
+        }).catch((err) => {
+            console.log(err);
+        });
+    })
+
+    this.afterAll( function(done) {
+        client.flushdb( (err, success) => {
+            done();
+        });
+    })
+
+    it('should return status 401 if token header is not provided', (done) => {
+        
+        chai.request(app)
+            .post('/')
+            .send(prototype)
+            .end( (err, res) => {
+                expect(res.status).to.equal(401);
+                expect(res.body).to.have.property('message');
+                expect(res.body.message).to.equal('Please provide a valid token');
+                done();
+            });    
+    });
+
+    it ('should return status 201 if inputs are valid', (done) => {
+        
+
+        chai.request(app)
+            .post('/')
+            .send(prototype)
+            .set({token: token})
+            .end( (err, res) => {
+                expect(res.status).to.equal(201);
+                expect(res.body).to.have.property('message');
+                expect(res.body.message).to.equal('item has been successfully added');
+                done();
+            });
+
+    });
+
+    it ('should return status 400 if inputs are invalid', (done) => {
+        
+        
+        prototype.name = '';
+        prototype.source = '';
+
+        chai.request(app)
+            .post('/')
+            .set({token: token})
+            .send(prototype)
+            .end( (err, res) => {
+                expect(res.status).to.equal(400);
+                expect(res.body).to.have.property('message');
+                expect(res.body.message).to.equal("name can't be empty");
+                done();
+            });
+
+    });
 
 });

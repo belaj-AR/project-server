@@ -1,21 +1,40 @@
 const Item = require('../models/item');
+const client = require('redis').createClient();
 const { getErrMessage } = require('../helpers');
 
 
 module.exports = {
     getAll: (req, res) => {
+        client.get('ar-models', (err, reply) => {
+            if(reply) {
+                res.status(200).json(JSON.parse(reply));
+            } else {
+                module.exports.getAllAndCache(res);
+            }
+        });
+    },
+
+    getAllAndCache: (res) => {
         Item.find({}).then((result) => {
-            res.status(200).json({
+
+            let response = {
                 message: 'item successfully fetched',
                 data: result
-            });
+            }
+            console.log('cache');
+            client.set('ar-models', JSON.stringify(response), 'EX', 10);
+            
+            if (res) {
+                res.status(200).json(response);
+            }
         }).catch((err) => {
             res.status(500).json({
                 message: 'unable to fetch the item'
             });
         });
-
     },
+
+
 
     getOne: (req, res) => {
         Item.findOne({_id: req.params.id}).then((result) => {
@@ -41,6 +60,7 @@ module.exports = {
         });
 
         newItem.save().then((item) => {
+            module.exports.getAllAndCache();
             res.status(201).json({
                 message: 'item has been successfully added'
             });
@@ -52,6 +72,7 @@ module.exports = {
     },
 
     removeItem: (req, res) => {
+        module.exports.getAllAndCache();
         Item.deleteOne({_id: req.params.id}).then((result) => {
             res.status(200).json({
                 message: 'item has been deleted',
@@ -73,12 +94,12 @@ module.exports = {
             textures: textures,
             element: element
         }, {runValidators: true}).then((result) => {
+            module.exports.getAllAndCache();
             res.status(200).json({
                 message: 'item has been updated',
                 data: result
             });
         }).catch((err) => {
-            console.log(err.message);
             res.status(400).json({
                 message: getErrMessage(err.message) || err.message
             });

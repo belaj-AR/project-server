@@ -7,10 +7,8 @@ chai.use(chaiHttp);
 
 const expect = require('chai').expect;
 const jwt = require('jsonwebtoken');
-const token = jwt.sign({foo:'bar'}, process.env.JWT_KEY);
 
 describe('/POST items', function() {
-    
 
     let prototype =  {
         name: 'fakeModel',
@@ -47,7 +45,7 @@ describe('/POST items', function() {
     });
 
     it ('should return status 201 if inputs are valid', (done) => {
-        
+        let token = jwt.sign({foo:'bar'}, process.env.JWT_KEY);
 
         chai.request(app)
             .post('/')
@@ -63,7 +61,7 @@ describe('/POST items', function() {
     });
 
     it ('should return status 400 if inputs are invalid', (done) => {
-        
+        let token = jwt.sign({foo:'bar'}, process.env.JWT_KEY);
         
         prototype.name = '';
         prototype.source = '';
@@ -84,7 +82,7 @@ describe('/POST items', function() {
 });
 
 describe('/GET items', function(done) {
-    
+
     beforeEach( function(done) {
         Item.create({
             name:'foo',
@@ -105,7 +103,7 @@ describe('/GET items', function(done) {
     });
 
     it( 'should return status 200 if data is succesfully fetched', (done) => {
-        
+        let token = jwt.sign({foo:'bar'}, process.env.JWT_KEY);
         
         chai.request(app)
             .get('/')
@@ -127,173 +125,6 @@ describe('/GET items', function(done) {
                 done();
             });
     });
-
-    
     
 
 })
-
-describe('/GET ONE DATA', function(done) {
-    
-    it('should return status 200 if some spesific data is fetched', (done) => {
-        
-
-        let newItem = new Item({name: 'testing', source: 'test'});
-
-        newItem.save().then((item) => {
-            
-            let id = item._id;
-
-            chai.request(app)
-                .get(`/${id}`)
-                .set({token: token})
-                .end( (err, res) => {
-                   
-                    expect(res.status).to.equal(200);
-                    expect(res.body).to.have.property('message');
-                    expect(res.body.message).to.equal('item successfully fetched');
-
-
-                    Item.deleteMany({}).then((result) => {
-                        done()
-                    }).catch((err) => {
-                        console.log(err);
-                    });
-                });
-        });
-        
-    });
-
-    it('should return status 400 if params is not found', (done) => {
-        chai.request(app)
-            .get('/1')
-            .set({token: token})
-            .end( (err, res) => {
-                
-                expect(res.status).to.equal(400);
-                expect(res.body).to.have.property('message');
-                expect(res.body.message).to.equal('unable to find the item');
-
-                done();
-            })
-    });
-    
-
-});
-
-describe('/DELETE item', function(done) {
-
-    it('should return status 200 if item is deleted', (done) => {
-        let newItem = new Item({name: 'bar', source: 'foo'});
-
-        newItem.save().then((item) => {
-            
-            let id = item._id;
-
-            chai.request(app)
-                .del(`/${id}`)
-                .set({token: token})
-                .end( (err, res) => {
-                   
-                    expect(res.status).to.equal(200);
-                    expect(res.body).to.have.property('message');
-                    expect(res.body.message).to.equal('item has been deleted');
-
-                    done();
-                });
-        });
-    });
-
-    it('should return status 400 if item is not found', (done) => {
-        chai.request(app)
-            .del(`/1`)
-            .set({token: token})
-            .end( (err, res) => {
-                
-                expect(res.status).to.equal(400);
-                expect(res.body).to.have.property('message');
-                expect(res.body.message).to.equal('unable to delete the data');
-
-                done();
-            });
-    });
-});
-
-describe('/PUT item', function(done) {
-    let updatedData = {
-        name: 'updated',
-        source: 'updated'
-    }
-
-    it('should successfully update the item if the input is valid', (done) => {
-        
-        let itemToUpdate = new Item({name: 'testing', source: 'test'});
-
-        itemToUpdate.save().then((item) => {
-            
-            let id = item._id;
-            
-            chai.request(app)
-                .put(`/${id}`)
-                .send(updatedData)
-                .set({token: token})
-                .end( (err, res) => {
-                   
-                    expect(res.status).to.equal(200);
-                    expect(res.body).to.have.property('message');
-                    expect(res.body.message).to.equal('item has been updated');
-
-                    Item.deleteMany({}).then((result) => {
-                        done()
-                    }).catch((err) => {
-                        console.log(err);
-                    });
-                });
-        });
-    });
-
-    it('should fail to update the item if the id is invalid', (done) => {
-        chai.request(app)
-                .put(`/1`)
-                .send(updatedData)
-                .set({token: token})
-                .end( (err, res) => {
-                    console.log(res.body);
-                    expect(res.status).to.equal(400);
-                    expect(res.body).to.have.property('message');
-                    expect(res.body.message).to.equal('unable to find and update the data');
-
-                    done();
-                });
-    });
-
-    it('should fail to update the item if the input is invalid', (done) => {
-        
-        let itemToUpdate = new Item({name: 'testing', source: 'test'});
-        
-        itemToUpdate.save().then((item) => {
-            
-            let id = item._id;
-            
-            chai.request(app)
-                .put(`/${id}`)
-                .send()
-                .set({token: token})
-                .end( (err, res) => {
-                   
-                    expect(res.status).to.equal(400);
-                    expect(res.body).to.have.property('message');
-                    expect(res.body.message).to.equal("name can't be empty");
-
-                    Item.deleteMany({}).then((result) => {
-                        done()
-                    }).catch((err) => {
-                        console.log(err);
-                    });
-                });
-        });
-    });
-    
-    
-
-});

@@ -28,12 +28,12 @@ class ControllerUser {
   static getToken(req, res) {
     User.findOne({ email: req.body.email })
       .then(data => {
-
+        
         if (data) {
           let token = jwt.sign({
             id: data._id,
             email: data.email,
-            uid: data.uid
+            uid: req.body.uid
           }, process.env.JWT_SECRET)
 
           res.status(201).json({
@@ -58,7 +58,8 @@ class ControllerUser {
         _id: req.decoded.id
       })
       .then(data => {
-        if (data) {
+       
+      if (data) {     
           if (bcrypt.compareSync(req.decoded.uid, data.uid)) {
             res.status(200).json({
               status: 'success',

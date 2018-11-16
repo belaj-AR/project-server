@@ -21,7 +21,7 @@ module.exports = {
                 message: 'item successfully fetched',
                 data: result
             }
-            console.log('cache');
+            
             client.set('ar-models', JSON.stringify(response), 'EX', 10);
             
             if (res) {
@@ -50,13 +50,14 @@ module.exports = {
     },
 
     addItem: (req, res) => {
-        let { name, source, textures, element } = req.body ;
+        let { name, source, textures, element, theme } = req.body ;
 
         let newItem = new Item({
             name: name,
             source: source,
             textures: textures,
-            element: element
+            element: element,
+            theme: theme
         });
 
         newItem.save().then((item) => {
@@ -86,13 +87,14 @@ module.exports = {
     },
 
     updateItem: (req, res) => {
-        let { name, source, textures, element } = req.body;
+        let { name, source, textures, element, theme } = req.body;
         
         Item.updateOne({_id: req.params.id}, {
             name: name,
             source: source,
             textures: textures,
-            element: element
+            element: element,
+            theme: theme
         }, {runValidators: true}).then((result) => {
             module.exports.getAllAndCache();
             res.status(200).json({

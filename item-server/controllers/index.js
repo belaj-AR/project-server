@@ -50,14 +50,15 @@ module.exports = {
     },
 
     addItem: (req, res) => {
-        let { name, source, textures, element, theme } = req.body ;
+        let { name, source, textures, element, theme, image } = req.body ;
 
         let newItem = new Item({
             name: name,
             source: source,
             textures: textures,
             element: element,
-            theme: theme
+            theme: theme,
+            image: image
         });
 
         newItem.save().then((item) => {
@@ -87,14 +88,15 @@ module.exports = {
     },
 
     updateItem: (req, res) => {
-        let { name, source, textures, element, theme } = req.body;
+        let { name, source, textures, element, theme, image } = req.body;
         
         Item.updateOne({_id: req.params.id}, {
             name: name,
             source: source,
             textures: textures,
             element: element,
-            theme: theme
+            theme: theme,
+            image: image
         }, {runValidators: true}).then((result) => {
             module.exports.getAllAndCache();
             res.status(200).json({

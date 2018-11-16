@@ -52,7 +52,8 @@ module.exports = {
         source: req.body.source,
         textures: req.body.textures,
         element: req.body.element,
-        theme: req.body.theme
+        theme: req.body.theme,
+        image: req.body.image
       },
       headers: {
         token: req.auth.token
@@ -102,7 +103,8 @@ module.exports = {
         source: req.body.source,
         element: req.body.element,
         textures: req.body.textures,
-        theme: req.body.theme
+        theme: req.body.theme,
+        image: req.body.image
       },
       headers: {
         token: req.auth.token

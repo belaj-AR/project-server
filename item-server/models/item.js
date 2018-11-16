@@ -12,6 +12,9 @@ const itemSchema = new Schema({
         required: true
     },
     textures: [{type: String}],
+    theme: {
+        type: String
+    },
     element: { 
         type: String 
     }

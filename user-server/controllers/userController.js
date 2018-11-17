@@ -28,7 +28,7 @@ class ControllerUser {
   static getToken(req, res) {
     User.findOne({ email: req.body.email })
       .then(data => {
-        
+        console.log(req.body, 'form login');
         if (data) {
           let token = jwt.sign({
             id: data._id,
@@ -54,11 +54,13 @@ class ControllerUser {
   }
 
   static getUserData(req, res) {
+    console.log(req.decoded);
     User.findOne({
         _id: req.decoded.id
       })
       .then(data => {
-       
+        console.log(req.decoded.id);
+        console.log(data.uid);
       if (data) {     
           if (bcrypt.compareSync(req.decoded.uid, data.uid)) {
             res.status(200).json({
@@ -71,6 +73,7 @@ class ControllerUser {
               }
             })
           } else {
+            console.log('bcrypt fail');
             res.status(500).json({
               status: 'failed',
               message: 'wrong token or user not found'
@@ -105,6 +108,7 @@ class ControllerUser {
       uid: req.body.uid
     }
 
+    console.log(req.body, 'initial data');
     let user = new User(data)
 
     user.save()

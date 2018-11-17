@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www --exec \"yarn run user\"",
+    "start": "nodemon ./bin/www",
+    "runall": "nodemon ./bin/www --exec \"yarn run user\"",
     "user": "cd .. && cd user-server && STAGE=DEV && yarn run dev --exec \"yarn run item\""
   },
   "dependencies": {

@@ -6,7 +6,8 @@
   "scripts": {
     "test": "STAGE=test mocha",
     "prod": "STAGE=prod node app.js",
-    "dev": "STAGE=dev nodemon app.js"
+    "dev": "STAGE=dev nodemon app.js",
+    "item": "cd .. && cd item-server && STAGE=DEV && yarn run dev"
   },
   "keywords": [],
   "author": "",

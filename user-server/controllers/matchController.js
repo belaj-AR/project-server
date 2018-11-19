@@ -19,9 +19,8 @@ module.exports = {
             res.status(400).json({message: err.message});
         });    
     },
-    //TODO CHANGE BODY TO DECODED
     getMatchHistory: (req, res) => {
-        Match.find({$or: [{winner: req.body.id}, {loser: req.body.id}]}).then((result) => {
+        Match.find({$or: [{winner: req.decoded.id}, {loser: req.decoded.id}]}).populate('winner', 'fname lname avatar').populate('loser', 'fname lname avatar').then((result) => {
             res.status(200).json({message: 'getting match data succeeds', data: result});
         }).catch((err) => {
             res.status(400).json({message: err.message});
@@ -29,7 +28,7 @@ module.exports = {
     },
 
     getOneMatch: (req, res) => {
-        Match.findOne({_id: req.params.id}).then((result) => {
+        Match.findOne({_id: req.params.id}).populate('winner', 'fname lname avatar').populate('loser', 'fname lname avatar').then((result) => {
             res.status(200).json({message: 'getting match data succeeds', data: result});
         }).catch((err) => {
             res.status(400).json({message: err.message});

@@ -55,7 +55,7 @@ class ControllerUser {
     
     User.findOne({
         _id: req.decoded.id
-      })
+      }).populate('win lose')
       .then(data => {
         
       if (data) {     
@@ -68,7 +68,9 @@ class ControllerUser {
                 email: data.email,
                 fname: data.fname,
                 avatar: data.avatar,
-                role: data.role
+                role: data.role,
+                win: data.win,
+                lose: data.lose,
               }
             })
           } else {

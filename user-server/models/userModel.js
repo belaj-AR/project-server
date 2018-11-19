@@ -59,7 +59,9 @@ const userSchema = new Schema({
   role: {
     type: String,
     default: 'user'
-  }
+  },
+  win: [{type: mongoose.Schema.Types.ObjectId, ref: 'Match'}],
+  lose: [{type: mongoose.Schema.Types.ObjectId, ref: 'Match'}]
 });
 
 userSchema.post('validate', doc => {

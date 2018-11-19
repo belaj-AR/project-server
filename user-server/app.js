@@ -5,6 +5,7 @@ const cors = require('cors');
 const logger = require('morgan');
 
 const userRoute = require('./routes/userRoutes')
+const matchRoute = require('./routes/matchRoutes')
 
 const app = express();
 const port = process.env.PORT || 7001;
@@ -37,6 +38,7 @@ app.use(express.urlencoded({
 }))
 
 app.use('/users', userRoute)
+app.use('/matches', matchRoute)
 app.use('/', (req, res) => {
   res.status(200).json({
     message: 'server user active'

@@ -7,7 +7,8 @@
     "test": "STAGE=test nyc mocha --exit",
     "prod": "STAGE=prod node app.js",
     "dev": "STAGE=dev nodemon app.js",
-    "item": "cd .. && cd item-server && STAGE=DEV && yarn run dev"
+    "item": "cd .. && cd item-server && STAGE=DEV && yarn run dev",
+    "test-main-server": "STAGE=test nodemon app.js"
   },
   "keywords": [],
   "author": "",

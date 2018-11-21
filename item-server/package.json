@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "test": "STAGE=test nyc mocha --exit",
+    "test-main-server": "STAGE=test nodemon ./bin/www",
     "prod": "STAGE=prod node ./bin/www",
     "dev": "STAGE=dev nodemon ./bin/www"
   },

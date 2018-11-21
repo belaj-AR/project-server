@@ -55,21 +55,4 @@ module.exports = {
             });
        });
     },
-
-    removeMatch: (req, res) => {
-        axios({
-            method: 'DELETE',
-            url: `${uriServerMatch}/${req.params.id}`,
-            headers: {
-                token: req.headers.token
-            }
-        }).then((result) => {
-            res.status(200).json(result.data);
-        }).catch((err) => {
-            let error = err.response
-            res.status(400).json({
-                message: error.message
-            });
-        });
-    },
 };

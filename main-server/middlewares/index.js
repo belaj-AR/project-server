@@ -23,7 +23,7 @@ module.exports = {
             });
 
         } else {
-            console.log('gagal');
+           
             res.status(500).json({
                 status: 'failed',
                 message: 'You need to login first'

@@ -16,7 +16,7 @@ module.exports = {
         }).then((result) => {
             res.status(200).json(result.data);
         }).catch((err) => {
-            let error = err.response
+            let error = err.response.data;
             res.status(400).json({
                 message: error.message
             });
@@ -32,7 +32,7 @@ module.exports = {
         }).then((result) => {
             res.status(200).json(result.data);
         }).catch((err) => {
-            let error = err.response
+            let error = err.response.data
             res.status(400).json({
                 message: error.message
             });
@@ -49,7 +49,7 @@ module.exports = {
        }).then((result) => {
             res.status(200).json(result.data);
        }).catch((err) => {
-            let error = err.response
+            let error = err.response.data
             res.status(400).json({
                 message: error.message
             });

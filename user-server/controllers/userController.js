@@ -52,13 +52,14 @@ class ControllerUser {
   }
 
   static getUserData(req, res) {
-    
+  
     User.findOne({
         _id: req.decoded.id
       }).populate('win lose')
       .then(data => {
         
-      if (data) {     
+      if (data) { 
+  
           if (bcrypt.compareSync(req.decoded.uid, data.uid)) {
             
             res.status(200).json({
@@ -74,7 +75,6 @@ class ControllerUser {
               }
             })
           } else {
-            
             res.status(500).json({
               status: 'failed',
               message: 'wrong token or user not found'

@@ -16,14 +16,14 @@ module.exports = {
                 res.status(400).json({message: err.message});
             });           
         }).catch((err) => {
-            res.status(400).json({message: err.message});
+            res.status(400).json({message: 'winner and loser must be specified'});
         });    
     },
     getMatchHistory: (req, res) => {
         Match.find({$or: [{winner: req.decoded.id}, {loser: req.decoded.id}]}).populate('winner', 'fname lname avatar').populate('loser', 'fname lname avatar').then((result) => {
             res.status(200).json({message: 'getting match data succeeds', data: result});
         }).catch((err) => {
-            res.status(400).json({message: err.message});
+            res.status(400).json({message: 'unable to find the match'});
         });
     },
 
@@ -31,15 +31,7 @@ module.exports = {
         Match.findOne({_id: req.params.id}).populate('winner', 'fname lname avatar').populate('loser', 'fname lname avatar').then((result) => {
             res.status(200).json({message: 'getting match data succeeds', data: result});
         }).catch((err) => {
-            res.status(400).json({message: err.message});
+            res.status(400).json({message: 'unable to find the match'});
         });
     },
-
-    removeMatch: (req, res) => {
-        Match.deleteOne({_id: req.params.id}).then((result) => {
-            res.status(200).json({message: 'match has been deleted', data: result});
-        }).catch((err) => {
-            res.status(400).json({message: err.message});
-        });
-    }
 };

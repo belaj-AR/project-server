@@ -187,7 +187,6 @@ describe('/PUT item', function(done) {
                 .send(updatedData)
                 .set({token: token})
                 .end( (err, res) => {
-                    console.log(res.body);
                     expect(res.status).to.equal(400);
                     expect(res.body).to.have.property('message');
                     expect(res.body.message).to.equal('unable to find and update the data');

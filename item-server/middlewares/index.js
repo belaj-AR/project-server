@@ -18,7 +18,6 @@ module.exports = {
     },
 
     TestingToken: (req, res, next) => {
-        console.log(req.headers.token, 'ok');
         try {  
             let decoded = jwt.verify(req.headers['token'], process.env.JWT_TESTING);
             next();

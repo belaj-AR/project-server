@@ -116,7 +116,6 @@ describe('/get items', function(done) {
                 source: 'barrr'
             })
             .end((err, res) => {
-                console.log(res.body);
                 expect(res.status).to.equal(200);
                 done();
             });
@@ -131,7 +130,6 @@ describe('/get items', function(done) {
                 source: 'barrr'
             })
             .end((err, res) => {
-                console.log(res.body);
                 expect(res.status).to.equal(500);
                 done();
             });
@@ -164,7 +162,6 @@ describe('/delete items', function(done) {
             .delete(`${uriServerItemAdmin}/${itemTofind}`)
             .set({token: userToken})
             .end((err, res) => {
-                console.log(res);
                 done();
             });
     });

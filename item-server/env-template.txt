@@ -1,0 +1,9 @@
+PORT = port
+
+DB_TEST = database testing url
+
+DB_DEV = datavase development url
+
+DB_PROD = database production url
+
+JWT_KEY = password
